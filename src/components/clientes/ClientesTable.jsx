@@ -349,9 +349,6 @@ export function ClientesTable() {
                         }
                       />
                       <Button variant="ghost" size="icon">
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>

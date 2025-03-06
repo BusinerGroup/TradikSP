@@ -16,10 +16,6 @@ export function ClientesPage() {
       </div>
       
       <Tabs defaultValue="listado" value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="mb-6">
-          <TabsTrigger value="listado">Listado de Clientes</TabsTrigger>
-          <TabsTrigger value="formulario">Formulario de Registro</TabsTrigger>
-        </TabsList>
         <TabsContent value="listado">
           <ClientesTable />
         </TabsContent>
