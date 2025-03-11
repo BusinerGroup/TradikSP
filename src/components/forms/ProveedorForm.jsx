@@ -57,12 +57,12 @@ const formSchema = z.object({
   email: z.string().email({
     message: "Por favor ingrese un correo electrónico válido.",
   }).optional(),
-  tipoCliente: z.string({
-    required_error: "Por favor seleccione un tipo de cliente.",
+  tipoProveedor: z.string({
+    required_error: "Por favor seleccione un tipo de proveedor.",
   }),
 });
 
-export function ClienteForm({ onSuccess, inDialog = false, initialData = null }) {
+export function ProveedorForm({ onSuccess, inDialog = false, initialData = null }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Definir el formulario con React Hook Form
@@ -77,7 +77,7 @@ export function ClienteForm({ onSuccess, inDialog = false, initialData = null })
       contacto: "",
       telefono: "",
       email: "",
-      tipoCliente: "",
+      tipoProveedor: "",
     },
   });
 
@@ -89,7 +89,7 @@ export function ClienteForm({ onSuccess, inDialog = false, initialData = null })
     setTimeout(() => {
       console.log(values);
       setIsSubmitting(false);
-      alert("Cliente guardado con éxito");
+      alert("Proveedor guardado con éxito");
       form.reset();
       if (onSuccess) onSuccess();
     }, 1000);
@@ -119,10 +119,10 @@ export function ClienteForm({ onSuccess, inDialog = false, initialData = null })
           
           <FormField
             control={form.control}
-            name="tipoCliente"
+            name="tipoProveedor"
             render={({ field }) => (
               <FormItem className="space-y-2">
-                <FormLabel className="text-base font-semibold text-foreground">Tipo de Cliente</FormLabel>
+                <FormLabel className="text-base font-semibold text-foreground">Tipo de Proveedor</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
@@ -130,11 +130,11 @@ export function ClienteForm({ onSuccess, inDialog = false, initialData = null })
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="Individual">Individual</SelectItem>
-                    <SelectItem value="Corporativo">Corporativo</SelectItem>
-                    <SelectItem value="Gubernamental">Gubernamental</SelectItem>
-                    <SelectItem value="Educativo">Educativo</SelectItem>
-                    <SelectItem value="ONG">ONG</SelectItem>
+                    <SelectItem value="Mayorista">Mayorista</SelectItem>
+                    <SelectItem value="Fabricante">Fabricante</SelectItem>
+                    <SelectItem value="Importador">Importador</SelectItem>
+                    <SelectItem value="Servicios">Servicios</SelectItem>
+                    <SelectItem value="Especializado">Especializado</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -290,7 +290,7 @@ export function ClienteForm({ onSuccess, inDialog = false, initialData = null })
               disabled={isSubmitting}
               className="bg-blue-600 hover:bg-blue-700"
             >
-              {isSubmitting ? "Guardando..." : "Guardar Cliente"}
+              {isSubmitting ? "Guardando..." : "Guardar Proveedor"}
             </Button>
           </div>
         )}
@@ -308,10 +308,10 @@ export function ClienteForm({ onSuccess, inDialog = false, initialData = null })
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
         <CardTitle className="text-xl font-bold">
-          {initialData ? "Editar Cliente" : "Nuevo Cliente"}
+          {initialData ? "Editar Proveedor" : "Nuevo Proveedor"}
         </CardTitle>
         <CardDescription>
-          Complete el formulario para {initialData ? "actualizar la información del" : "registrar un nuevo"} cliente.
+          Complete el formulario para {initialData ? "actualizar la información del" : "registrar un nuevo"} proveedor.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -319,4 +319,4 @@ export function ClienteForm({ onSuccess, inDialog = false, initialData = null })
       </CardContent>
     </Card>
   );
-} 
+}

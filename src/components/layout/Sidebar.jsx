@@ -26,7 +26,7 @@ export function Sidebar() {
   const location = useLocation();
   
   return (
-    <div className="hidden border-r bg-background md:block">
+    <div className="hidden border-r bg-gray-50/95 md:block">
       <div className="flex h-full flex-col gap-2">
         <div className="px-3 py-2">
           <NavItem 
@@ -34,7 +34,7 @@ export function Sidebar() {
             label="Menú Principal" 
             icon={<LayoutDashboard className="h-4 w-4" />} 
             isActive={location.pathname === "/"}
-            className="mb-2 px-1 text-lg font-semibold"
+            className="mb-2 px-1 text-lg font-semibold hover:bg-white/80"
           />
           <div className="space-y-1">
             <NavItemWithSubmenu 
@@ -44,8 +44,7 @@ export function Sidebar() {
               submenuItems={[
                 { href: "/terceros/clientes", label: "Clientes" },
                 { href: "/terceros/proveedores", label: "Proveedores" },
-                { href: "/terceros/empleados", label: "Empleados" },
-                { href: "/terceros/contactos", label: "Contactos" }
+                { href: "/terceros/logisticos", label: "Logísticos" }
               ]}
             />
             
@@ -54,10 +53,9 @@ export function Sidebar() {
               icon={<Briefcase className="h-4 w-4" />}
               currentPath={location.pathname}
               submenuItems={[
-                { href: "/servicios/catalogo", label: "Catálogo de Servicios" },
-                { href: "/servicios/contratos", label: "Contratos" },
-                { href: "/servicios/proyectos", label: "Proyectos" },
-                { href: "/servicios/soporte", label: "Soporte Técnico" }
+                { href: "/servicios/ss", label: "Servicios (SS)" },
+                { href: "/servicios/orden-trabajo", label: "Orden de Trabajo" },
+                { href: "/servicios/despachos", label: "Despachos (Remisiones)" }
               ]}
             />
             
@@ -66,17 +64,15 @@ export function Sidebar() {
               icon={<CreditCard className="h-4 w-4" />}
               currentPath={location.pathname}
               submenuItems={[
-                { href: "/tesoreria/facturas", label: "Facturas" },
-                { href: "/tesoreria/pagos", label: "Pagos" },
-                { href: "/tesoreria/cobros", label: "Cobros" },
-                { href: "/tesoreria/informes", label: "Informes Financieros" }
+                { href: "/tesoreria/cuentas-cobrar", label: "Cuentas por Cobrar" },
+                { href: "/tesoreria/cuentas-pagar", label: "Cuentas por Pagar" }
               ]}
             />
           </div>
         </div>
-        <Separator />
+        <Separator className="bg-gray-200" />
         <div className="px-3 py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight text-gray-700">
             Administración
           </h2>
           <div className="space-y-1">
@@ -85,6 +81,7 @@ export function Sidebar() {
               label="Configuración" 
               icon={<Settings className="h-4 w-4" />} 
               isActive={location.pathname === "/configuracion"}
+              className="hover:bg-white/80"
             />
           </div>
         </div>
@@ -97,10 +94,10 @@ function NavItem({ href, label, icon, isActive, className = "" }) {
   return (
     <Link
       to={href}
-      className={`flex items-center rounded-md px-3 py-2 text-sm font-medium ${
+      className={`flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
         isActive 
-          ? "bg-accent text-accent-foreground" 
-          : "hover:bg-accent hover:text-accent-foreground"
+          ? "bg-white text-blue-600 shadow-sm" 
+          : "text-gray-600 hover:bg-white/80 hover:text-blue-600"
       } ${className}`}
     >
       {icon && <span className="mr-2">{icon}</span>}
@@ -119,10 +116,10 @@ function NavItemWithSubmenu({ label, icon, submenuItems, currentPath }) {
       onOpenChange={setIsOpen}
       className="w-full"
     >
-      <CollapsibleTrigger className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium ${
+      <CollapsibleTrigger className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-colors ${
         isAnyChildActive 
-          ? "bg-accent/50 text-accent-foreground" 
-          : "hover:bg-accent hover:text-accent-foreground"
+          ? "bg-white text-blue-600 shadow-sm" 
+          : "text-gray-600 hover:bg-white/80 hover:text-blue-600"
       }`}>
         <div className="flex items-center">
           {icon && <span className="mr-2">{icon}</span>}
@@ -140,10 +137,10 @@ function NavItemWithSubmenu({ label, icon, submenuItems, currentPath }) {
             <Link
               key={index}
               to={item.href}
-              className={`rounded-md px-3 py-1.5 text-sm font-medium ${
+              className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                 currentPath === item.href 
-                  ? "bg-accent text-accent-foreground" 
-                  : "hover:bg-accent hover:text-accent-foreground"
+                  ? "bg-white text-blue-600 shadow-sm" 
+                  : "text-gray-600 hover:bg-white/80 hover:text-blue-600"
               }`}
             >
               {item.label}

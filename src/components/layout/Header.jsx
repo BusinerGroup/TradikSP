@@ -38,7 +38,11 @@ export function Header({ onSidebarToggle }) {
         <div className="flex flex-1 items-center justify-between">
           <div className="flex items-center gap-2">
             <Link to="/" className="flex items-center space-x-2">
-              <span className="font-bold">Mi Aplicación</span>
+              <span className="text-lg font-semibold">
+                <span className="bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent">Sun Partners</span>
+                <span className="mx-2 text-gray-400">-</span>
+                <span className="bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">Control de Eventos</span>
+              </span>
             </Link>
           </div>
           <div className="flex items-center gap-2">

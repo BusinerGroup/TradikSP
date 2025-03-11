@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Plus, Edit, Trash2, Eye, ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Plus, Trash2, Eye, ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { ClienteForm } from "@/components/forms/ClienteForm";
 import { ClienteSheet } from "./ClienteDrawer";
 import {
@@ -37,108 +37,144 @@ const clientesData = [
   { 
     id: 1, 
     nombre: "Empresa ABC", 
-    documento: "A123456789", 
+    tipoDocumento: "CIF",
+    numeroDocumento: "A123456789", 
     telefono: "555-1234", 
+    email: "contacto@empresaabc.com",
     ciudad: "Madrid", 
+    contacto: "Juan Pérez",
     tipoCliente: "Corporativo",
     direccion: "Calle Principal 123, Madrid, España"
   },
   { 
     id: 2, 
     nombre: "Juan Pérez", 
-    documento: "B987654321", 
+    tipoDocumento: "NIF",
+    numeroDocumento: "B987654321", 
     telefono: "555-5678", 
+    email: "juan.perez@ejemplo.com",
     ciudad: "Barcelona", 
+    contacto: "María López",
     tipoCliente: "Individual",
     direccion: "Avenida Central 456, Barcelona, España"
   },
   { 
     id: 3, 
     nombre: "Ministerio de Educación", 
-    documento: "C456789123", 
+    tipoDocumento: "CIF",
+    numeroDocumento: "C456789123", 
     telefono: "555-9012", 
+    email: "info@educacion.gob.es",
     ciudad: "Valencia", 
+    contacto: "Ana Martínez",
     tipoCliente: "Gubernamental",
     direccion: "Plaza Mayor 789, Valencia, España"
   },
   { 
     id: 4, 
     nombre: "Universidad Central", 
-    documento: "D789123456", 
+    tipoDocumento: "CIF",
+    numeroDocumento: "D789123456", 
     telefono: "555-3456", 
+    email: "info@universidadcentral.edu",
     ciudad: "Sevilla", 
+    contacto: "Carlos Rodríguez",
     tipoCliente: "Educativo",
     direccion: "Calle Universidad 101, Sevilla, España"
   },
   { 
     id: 5, 
     nombre: "María García", 
-    documento: "E321654987", 
+    tipoDocumento: "NIF",
+    numeroDocumento: "E321654987", 
     telefono: "555-7890", 
+    email: "maria.garcia@ejemplo.com",
     ciudad: "Bilbao", 
+    contacto: "Luis Fernández",
     tipoCliente: "Individual",
     direccion: "Paseo del Mar 202, Bilbao, España"
   },
   { 
     id: 6, 
     nombre: "Carlos Rodríguez", 
-    documento: "F123789456", 
+    tipoDocumento: "NIF",
+    numeroDocumento: "F123789456", 
     telefono: "555-4567", 
+    email: "carlos.rodriguez@ejemplo.com",
     ciudad: "Madrid", 
+    contacto: "Ana Sánchez",
     tipoCliente: "Individual",
     direccion: "Avenida Principal 303, Madrid, España"
   },
   { 
     id: 7, 
     nombre: "Empresa XYZ", 
-    documento: "G456123789", 
+    tipoDocumento: "CIF",
+    numeroDocumento: "G456123789", 
     telefono: "555-7891", 
+    email: "info@empresaxyz.com",
     ciudad: "Barcelona", 
+    contacto: "Pedro Gómez",
     tipoCliente: "Corporativo",
     direccion: "Calle Comercial 404, Barcelona, España"
   },
   { 
     id: 8, 
     nombre: "Ana Martínez", 
-    documento: "H789456123", 
+    tipoDocumento: "NIF",
+    numeroDocumento: "H789456123", 
     telefono: "555-1235", 
+    email: "ana.martinez@ejemplo.com",
     ciudad: "Valencia", 
+    contacto: "Carlos Rodríguez",
     tipoCliente: "Individual",
     direccion: "Plaza Central 505, Valencia, España"
   },
   { 
     id: 9, 
     nombre: "Colegio San José", 
-    documento: "I321987654", 
+    tipoDocumento: "CIF",
+    numeroDocumento: "I321987654", 
     telefono: "555-5679", 
+    email: "info@colegiosanjose.edu",
     ciudad: "Sevilla", 
+    contacto: "Ana Sánchez",
     tipoCliente: "Educativo",
     direccion: "Calle Educación 606, Sevilla, España"
   },
   { 
     id: 10, 
     nombre: "Luis Sánchez", 
-    documento: "J654321987", 
+    tipoDocumento: "NIF",
+    numeroDocumento: "J654321987", 
     telefono: "555-9013", 
+    email: "luis.sanchez@ejemplo.com",
     ciudad: "Bilbao", 
+    contacto: "María García",
     tipoCliente: "Individual",
     direccion: "Avenida Marina 707, Bilbao, España"
   },
   { 
     id: 11, 
     nombre: "Ayuntamiento de Madrid", 
-    documento: "K987654321", 
+    tipoDocumento: "CIF",
+    numeroDocumento: "K987654321", 
     telefono: "555-3457", 
+    email: "info@ayuntamientomadrid.es",
     ciudad: "Madrid", 
+    contacto: "Ana Martínez",
     tipoCliente: "Gubernamental",
     direccion: "Plaza Mayor 808, Madrid, España"
   },
   { 
     id: 12, 
     nombre: "Elena López", 
-    documento: "L654789123", 
+    tipoDocumento: "NIF",
+    numeroDocumento: "L654789123", 
     telefono: "555-7892", 
+    email: "elena.lopez@ejemplo.com",
     ciudad: "Barcelona", 
+    contacto: "Pedro Gómez",
     tipoCliente: "Individual",
     direccion: "Calle Diagonal 909, Barcelona, España"
   },
@@ -166,7 +202,7 @@ export function ClientesTable() {
     // Primero filtramos
     let tempClientes = clientes.filter(cliente => 
       cliente.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cliente.documento.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cliente.numeroDocumento.toLowerCase().includes(searchTerm.toLowerCase()) ||
       cliente.telefono.toLowerCase().includes(searchTerm.toLowerCase()) ||
       cliente.ciudad.toLowerCase().includes(searchTerm.toLowerCase()) ||
       cliente.tipoCliente.toLowerCase().includes(searchTerm.toLowerCase())
@@ -263,11 +299,25 @@ export function ClientesTable() {
                 />
               </div>
             </div>
-            
-            <SheetFooter className="border-t bg-white pt-4 absolute bottom-0 left-0 right-0 p-4">
-              <div className="flex justify-end w-full">
+            <SheetFooter className="fixed bottom-0 left-0 right-0 py-4 px-6 bg-white border-t">
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  type="submit"
+                  form="clienteForm"
+                  className="bg-white hover:bg-blue-50 text-blue-600"
+                >
+                  Guardar
+                </Button>
                 <SheetClose asChild>
-                  <Button variant="outline" className="font-medium border-2 text-gray-700 hover:bg-gray-100">Cancelar</Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="bg-white hover:bg-gray-100"
+                  >
+                    Cancelar
+                  </Button>
                 </SheetClose>
               </div>
             </SheetFooter>
@@ -281,7 +331,7 @@ export function ClientesTable() {
           <TableHeader>
             <TableRow className="bg-muted/30">
               <TableHead 
-                className="font-bold cursor-pointer"
+                className="font-bold cursor-pointer py-2"
                 onClick={() => requestSort('nombre')}
               >
                 <div className="flex items-center">
@@ -290,16 +340,16 @@ export function ClientesTable() {
                 </div>
               </TableHead>
               <TableHead 
-                className="font-bold cursor-pointer"
-                onClick={() => requestSort('documento')}
+                className="font-bold cursor-pointer py-2"
+                onClick={() => requestSort('numeroDocumento')}
               >
                 <div className="flex items-center">
                   Documento
-                  {getSortIcon('documento')}
+                  {getSortIcon('numeroDocumento')}
                 </div>
               </TableHead>
               <TableHead 
-                className="font-bold cursor-pointer"
+                className="font-bold cursor-pointer py-2"
                 onClick={() => requestSort('telefono')}
               >
                 <div className="flex items-center">
@@ -308,7 +358,7 @@ export function ClientesTable() {
                 </div>
               </TableHead>
               <TableHead 
-                className="font-bold cursor-pointer"
+                className="font-bold cursor-pointer py-2"
                 onClick={() => requestSort('ciudad')}
               >
                 <div className="flex items-center">
@@ -317,7 +367,7 @@ export function ClientesTable() {
                 </div>
               </TableHead>
               <TableHead 
-                className="font-bold cursor-pointer"
+                className="font-bold cursor-pointer py-2"
                 onClick={() => requestSort('tipoCliente')}
               >
                 <div className="flex items-center">
@@ -325,30 +375,40 @@ export function ClientesTable() {
                   {getSortIcon('tipoCliente')}
                 </div>
               </TableHead>
-              <TableHead className="text-right font-bold">Acciones</TableHead>
+              <TableHead className="text-right font-bold py-2">Acciones</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {currentItems.length > 0 ? (
               currentItems.map((cliente) => (
                 <TableRow key={cliente.id}>
-                  <TableCell className="font-medium">{cliente.nombre}</TableCell>
-                  <TableCell>{cliente.documento}</TableCell>
-                  <TableCell>{cliente.telefono}</TableCell>
-                  <TableCell>{cliente.ciudad}</TableCell>
-                  <TableCell>{cliente.tipoCliente}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="font-medium py-1.5">{cliente.nombre}</TableCell>
+                  <TableCell className="py-1.5">{cliente.numeroDocumento}</TableCell>
+                  <TableCell className="py-1.5">{cliente.telefono}</TableCell>
+                  <TableCell className="py-1.5">{cliente.ciudad}</TableCell>
+                  <TableCell className="py-1.5">{cliente.tipoCliente}</TableCell>
+                  <TableCell className="text-right py-1.5">
                     <div className="flex justify-end gap-2">
                       <ClienteSheet 
                         cliente={cliente}
                         onClienteUpdated={handleClienteUpdated}
-                        trigger={
+                      >
                           <Button variant="ghost" size="icon">
                             <Eye className="h-4 w-4" />
                           </Button>
-                        }
-                      />
-                      <Button variant="ghost" size="icon">
+                      </ClienteSheet>
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        onClick={() => {
+                          if (window.confirm("¿Está seguro de que desea eliminar este cliente? Esta acción no se puede deshacer.")) {
+                            // Aquí iría la lógica para eliminar el cliente
+                            console.log("Cliente eliminado:", cliente);
+                            // En una aplicación real, aquí se recargarían los datos desde el servidor
+                            handleClienteUpdated();
+                          }
+                        }}
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>

@@ -32,29 +32,37 @@ function InformacionGeneral({ cliente }) {
           <p className="text-base font-semibold text-gray-900">{cliente.nombre}</p>
         </div>
         <div className="space-y-1">
-          <h3 className="text-sm font-medium text-gray-500">Documento</h3>
-          <p className="text-base font-semibold text-gray-900">{cliente.documento}</p>
+          <h3 className="text-sm font-medium text-gray-500">Tipo de Cliente</h3>
+          <p className="text-base font-semibold text-gray-900">{cliente.tipoCliente}</p>
         </div>
         <div className="space-y-1">
-          <h3 className="text-sm font-medium text-gray-500">Teléfono</h3>
-          <p className="text-base font-semibold text-gray-900">{cliente.telefono}</p>
+          <h3 className="text-sm font-medium text-gray-500">Tipo de Documento</h3>
+          <p className="text-base font-semibold text-gray-900">{cliente.tipoDocumento || "No especificado"}</p>
+        </div>
+        <div className="space-y-1">
+          <h3 className="text-sm font-medium text-gray-500">Número de Documento</h3>
+          <p className="text-base font-semibold text-gray-900">{cliente.numeroDocumento || cliente.documento}</p>
+        </div>
+        <div className="space-y-1">
+          <h3 className="text-sm font-medium text-gray-500">Dirección</h3>
+          <p className="text-base font-semibold text-gray-900">{cliente.direccion || "No especificada"}</p>
         </div>
         <div className="space-y-1">
           <h3 className="text-sm font-medium text-gray-500">Ciudad</h3>
           <p className="text-base font-semibold text-gray-900">{cliente.ciudad}</p>
         </div>
         <div className="space-y-1">
-          <h3 className="text-sm font-medium text-gray-500">Tipo de Cliente</h3>
-          <p className="text-base font-semibold text-gray-900">{cliente.tipoCliente}</p>
+          <h3 className="text-sm font-medium text-gray-500">Contacto</h3>
+          <p className="text-base font-semibold text-gray-900">{cliente.contacto || "No especificado"}</p>
         </div>
         <div className="space-y-1">
-          <h3 className="text-sm font-medium text-gray-500">Fecha de Registro</h3>
-          <p className="text-base font-semibold text-gray-900">01/01/2023</p>
+          <h3 className="text-sm font-medium text-gray-500">Teléfono</h3>
+          <p className="text-base font-semibold text-gray-900">{cliente.telefono}</p>
         </div>
-      </div>
-      <div className="space-y-1 border-t pt-4">
-        <h3 className="text-sm font-medium text-gray-500">Dirección</h3>
-        <p className="text-base font-semibold text-gray-900">{cliente.direccion || "No especificada"}</p>
+        <div className="space-y-1">
+          <h3 className="text-sm font-medium text-gray-500">Correo Electrónico</h3>
+          <p className="text-base font-semibold text-gray-900">{cliente.email || "No especificado"}</p>
+        </div>
       </div>
     </div>
   );
@@ -202,7 +210,7 @@ function Notas() {
   );
 }
 
-export function ClienteSheet({ cliente, trigger, onClienteUpdated }) {
+export function ClienteSheet({ cliente, children, onClienteUpdated }) {
   const [activeTab, setActiveTab] = useState("informacion");
   const [isEditing, setIsEditing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -218,8 +226,8 @@ export function ClienteSheet({ cliente, trigger, onClienteUpdated }) {
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetTrigger asChild onClick={() => setIsOpen(true)}>
-        {trigger}
+      <SheetTrigger asChild>
+        {children}
       </SheetTrigger>
       <SheetContent side="right" className="w-full sm:max-w-md md:max-w-lg lg:max-w-xl overflow-y-auto bg-gray-50">
         <SheetHeader className="border-b bg-white shadow-sm pb-4">
@@ -285,29 +293,36 @@ export function ClienteSheet({ cliente, trigger, onClienteUpdated }) {
           )}
         </div>
         
-        <SheetFooter className="border-t bg-white pt-4 absolute bottom-0 left-0 right-0 p-4">
-          <div className="flex justify-between w-full">
-            {isEditing ? (
-              <Button variant="outline" onClick={() => setIsEditing(false)} className="font-medium border-2 text-gray-700 hover:bg-gray-100">
-                Cancelar Edición
+        {!isEditing && (
+          <SheetFooter className="fixed bottom-0 left-0 right-0 py-4 px-6 bg-white border-t">
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsEditing(true)}
+                className="bg-white hover:bg-blue-50 text-blue-600"
+              >
+                Editar
               </Button>
-            ) : (
-              <div className="flex space-x-2">
-                <Button variant="outline" onClick={() => setIsEditing(true)} className="font-medium border-2 text-gray-700 hover:bg-gray-100">
-                  <FileEdit className="h-4 w-4 mr-2" />
-                  Editar
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-white hover:bg-red-50 text-red-600"
+              >
+                Eliminar
+              </Button>
+              <SheetClose asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-white hover:bg-gray-100"
+                >
+                  Cancelar
                 </Button>
-                <Button variant="destructive" onClick={handleDelete} className="font-medium bg-red-600 hover:bg-red-700 text-white">
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Eliminar
-                </Button>
-              </div>
-            )}
-            <SheetClose asChild>
-              <Button variant="outline" className="font-medium border-2 text-gray-700 hover:bg-gray-100">Cerrar</Button>
-            </SheetClose>
-          </div>
-        </SheetFooter>
+              </SheetClose>
+            </div>
+          </SheetFooter>
+        )}
       </SheetContent>
     </Sheet>
   );
