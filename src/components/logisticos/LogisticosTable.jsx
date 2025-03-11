@@ -1,19 +1,11 @@
 import { useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { 
-  Table, 
-  TableBody, 
-  TableCaption, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Plus, Trash2, Eye, ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Plus, Trash2, Eye } from "lucide-react";
 import { LogisticoForm } from "@/components/forms/LogisticoForm";
 import { LogisticoSheet } from "./LogisticoDrawer";
+import { DynamicTable } from "@/components/tables/DynamicTable";
 import {
   Sheet,
   SheetClose,
@@ -24,13 +16,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 // Datos de ejemplo para la tabla
 const logisticosData = [
@@ -97,61 +82,7 @@ export function LogisticosTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [logisticos, setLogisticos] = useState(logisticosData);
   const [nuevoLogisticoSheetOpen, setNuevoLogisticoSheetOpen] = useState(false);
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
   
-  // Función para ordenar
-  const requestSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-  };
-
-  // Filtrar y ordenar logísticos
-  const filteredAndSortedLogisticos = useMemo(() => {
-    // Primero filtramos
-    let tempLogisticos = logisticos.filter(logistico => 
-      logistico.nombres.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      logistico.apellidos.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      logistico.numeroDocumento.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      logistico.telefono.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      logistico.categoria.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    
-    // Luego ordenamos si hay una configuración de ordenamiento
-    if (sortConfig.key) {
-      tempLogisticos = [...tempLogisticos].sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
-        }
-        return 0;
-      });
-    }
-    
-    return tempLogisticos;
-  }, [logisticos, searchTerm, sortConfig]);
-
-  // Paginación
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredAndSortedLogisticos.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredAndSortedLogisticos.length / itemsPerPage);
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const handleItemsPerPageChange = (value) => {
-    setItemsPerPage(Number(value));
-    setCurrentPage(1);
-  };
-
   const handleLogisticoUpdated = () => {
     console.log("Logístico actualizado, recargando datos...");
   };
@@ -161,15 +92,78 @@ export function LogisticosTable() {
     console.log("Nuevo logístico guardado, recargando datos...");
   };
 
-  // Función para obtener el ícono de ordenamiento
-  const getSortIcon = (key) => {
-    if (sortConfig.key === key) {
-      return sortConfig.direction === 'ascending' 
-        ? <ArrowUpDown className="h-4 w-4 ml-1 text-blue-600" /> 
-        : <ArrowUpDown className="h-4 w-4 ml-1 text-blue-600 rotate-180" />;
+  // Definir las columnas para DynamicTable
+  const columns = [
+    { 
+      key: 'nombreCompleto', 
+      label: 'Apellidos y Nombres', 
+      sortable: true,
+      format: (_, item) => `${item.apellidos}, ${item.nombres}`
+    },
+    { 
+      key: 'documento', 
+      label: 'Documento', 
+      sortable: true,
+      format: (_, item) => `${item.tipoDocumento} ${item.numeroDocumento}`
+    },
+    { 
+      key: 'categoria', 
+      label: 'Categoría', 
+      sortable: true 
+    },
+    { 
+      key: 'telefono', 
+      label: 'Teléfono', 
+      sortable: true 
+    },
+    { 
+      key: 'fechaIngreso', 
+      label: 'Fecha Ingreso', 
+      sortable: true,
+      format: (value) => new Date(value).toLocaleDateString()
     }
-    return <ArrowUpDown className="h-4 w-4 ml-1 opacity-30" />;
-  };
+  ];
+
+  // Definir las acciones para DynamicTable
+  const actions = [
+    { 
+      name: 'Ver', 
+      icon: <Eye className="h-4 w-4" />, 
+      onClick: (logistico) => {
+        // Esta acción se maneja a través del componente LogisticoSheet
+        // que ya está configurado en el renderizado
+      },
+      customRender: (logistico) => (
+        <LogisticoSheet logistico={logistico} onSuccess={handleLogisticoUpdated}>
+          <Button variant="ghost" size="icon">
+            <Eye className="h-4 w-4" />
+          </Button>
+        </LogisticoSheet>
+      )
+    },
+    { 
+      name: 'Eliminar', 
+      icon: <Trash2 className="h-4 w-4" />, 
+      variant: 'ghost',
+      className: 'text-red-600',
+      onClick: (logistico) => {
+        if (window.confirm(`¿Está seguro de que desea eliminar a ${logistico.nombres} ${logistico.apellidos}?`)) {
+          console.log("Logístico eliminado:", logistico.id);
+        }
+      } 
+    }
+  ];
+
+  // Filtrar datos según el término de búsqueda
+  const filteredData = useMemo(() => {
+    return logisticos.filter(logistico => 
+      logistico.nombres.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      logistico.apellidos.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      logistico.numeroDocumento.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      logistico.telefono.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      logistico.categoria.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [logisticos, searchTerm]);
 
   return (
     <div className="space-y-4">
@@ -234,122 +228,16 @@ export function LogisticosTable() {
         </Sheet>
       </div>
       
-      <div className="rounded-md border shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-gray-100">
-              <TableHead className="font-bold cursor-pointer py-2" onClick={() => requestSort('apellidos')}>
-                <div className="flex items-center">
-                  Apellidos y Nombres {getSortIcon('apellidos')}
-                </div>
-              </TableHead>
-              <TableHead className="font-bold cursor-pointer py-2" onClick={() => requestSort('numeroDocumento')}>
-                <div className="flex items-center">
-                  Documento {getSortIcon('numeroDocumento')}
-                </div>
-              </TableHead>
-              <TableHead className="font-bold cursor-pointer py-2" onClick={() => requestSort('categoria')}>
-                <div className="flex items-center">
-                  Categoría {getSortIcon('categoria')}
-                </div>
-              </TableHead>
-              <TableHead className="font-bold cursor-pointer py-2" onClick={() => requestSort('telefono')}>
-                <div className="flex items-center">
-                  Teléfono {getSortIcon('telefono')}
-                </div>
-              </TableHead>
-              <TableHead className="font-bold cursor-pointer py-2" onClick={() => requestSort('fechaIngreso')}>
-                <div className="flex items-center">
-                  Fecha Ingreso {getSortIcon('fechaIngreso')}
-                </div>
-              </TableHead>
-              <TableHead className="text-right font-bold py-2">Acciones</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {currentItems.length > 0 ? (
-              currentItems.map((logistico) => (
-                <TableRow key={logistico.id}>
-                  <TableCell className="py-1.5">{`${logistico.apellidos}, ${logistico.nombres}`}</TableCell>
-                  <TableCell className="py-1.5">{`${logistico.tipoDocumento} ${logistico.numeroDocumento}`}</TableCell>
-                  <TableCell className="py-1.5">{logistico.categoria}</TableCell>
-                  <TableCell className="py-1.5">{logistico.telefono}</TableCell>
-                  <TableCell className="py-1.5">{new Date(logistico.fechaIngreso).toLocaleDateString()}</TableCell>
-                  <TableCell className="text-right py-1.5">
-                    <div className="flex justify-end gap-2">
-                      <LogisticoSheet logistico={logistico} onSuccess={handleLogisticoUpdated}>
-                        <Button variant="ghost" size="icon">
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                      </LogisticoSheet>
-                      <Button variant="ghost" size="icon" className="text-red-600">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center">
-                  No se encontró personal
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* Paginación */}
-      {filteredAndSortedLogisticos.length > 0 && (
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <span className="text-sm text-gray-700">
-              Mostrando {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredAndSortedLogisticos.length)} de {filteredAndSortedLogisticos.length} logísticos
-            </span>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-700">Mostrar</span>
-              <Select
-                value={itemsPerPage.toString()}
-                onValueChange={handleItemsPerPageChange}
-              >
-                <SelectTrigger className="w-[70px] h-8">
-                  <SelectValue placeholder="10" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="5">5</SelectItem>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="20">20</SelectItem>
-                  <SelectItem value="50">50</SelectItem>
-                </SelectContent>
-              </Select>
-              <span className="text-sm text-gray-700">por página</span>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <span className="text-sm text-gray-700">
-              Página {currentPage} de {totalPages}
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      )}
+      <DynamicTable 
+        columns={columns}
+        data={filteredData}
+        actions={actions}
+        caption="Listado de personal logístico"
+        searchPlaceholder="Buscar personal..."
+        showSearch={false} // Desactivamos la búsqueda interna porque ya tenemos nuestro propio campo de búsqueda
+        defaultItemsPerPage={10}
+        itemsPerPageOptions={[5, 10, 20, 50]}
+      />
     </div>
   );
 } 
