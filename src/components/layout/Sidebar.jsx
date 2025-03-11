@@ -54,7 +54,7 @@ export function Sidebar() {
               currentPath={location.pathname}
               submenuItems={[
                 { href: "/servicios/ss", label: "Servicios (SS)" },
-                { href: "/servicios/orden-trabajo", label: "Orden de Trabajo" },
+                { href: "/ordenes-trabajo", label: "Orden de Trabajo" },
                 { href: "/servicios/despachos", label: "Despachos (Remisiones)" }
               ]}
             />

@@ -5,6 +5,8 @@ import { ClientesPage } from './pages/ClientesPage'
 import { ProveedoresPage } from './pages/ProveedoresPage'
 import { LogisticosPage } from './pages/LogisticosPage'
 import { ServiciosPage } from './pages/ServiciosPage'
+import { OrdenesTrabajoPage } from './pages/OrdenesTrabajoPage'
+import { DynamicTableTestPage } from './pages/DynamicTableTestPage'
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
           <Route path="/terceros/proveedores" element={<ProveedoresPage />} />
           <Route path="/terceros/logisticos" element={<LogisticosPage />} />
           <Route path="/servicios/ss" element={<ServiciosPage />} />
+          <Route path="/ordenes-trabajo" element={<OrdenesTrabajoPage />} />
+          <Route path="/test/dynamic-table" element={<DynamicTableTestPage />} />
           {/* Rutas adicionales para futuras páginas */}
           <Route path="*" element={<div className="container py-10">Página no encontrada</div>} />
         </Routes>
