@@ -1,45 +1,9 @@
-import { useState, useMemo, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { 
-  Table, 
-  TableBody, 
-  TableCaption, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from "@/components/ui/table";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Plus, Trash2, Eye, ArrowUpDown, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
-import { ServicioForm } from "@/components/forms/ServicioForm";
+import { Search, Trash2, Eye } from "lucide-react";
+import { DynamicTable } from "@/components/tables/DynamicTable";
 import { ServicioSheet } from "./ServicioDrawer";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-} from "@/components/ui/tabs";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { ServicioDetalle } from "./ServicioDetalle";
 import { NuevoServicioDrawer } from "./NuevoServicioDrawer";
 
 // Datos de ejemplo para la tabla
@@ -81,83 +45,254 @@ const serviciosData = [
     coordinador: "Carlos Rodríguez",
     createdAt: "2024-03-16T11:15:00",
     updatedAt: "2024-03-16T11:15:00"
+  },
+  { 
+    id: 3,
+    numeroSS: "SS-2024-003",
+    fechaSolicitud: "2024-03-18",
+    fechaMontaje: "2024-04-01T10:00:00",
+    cliente: "Ministerio de Cultura",
+    evento: "Festival de Arte Urbano",
+    valor: 22000000,
+    facturaRemision: "F",
+    numeroFactura: "FACT-2024-002",
+    estado: "Pendiente",
+    costosProduccion: 12000000,
+    abonos: 11000000,
+    saldo: 11000000,
+    coordinador: "Laura Gómez",
+    createdAt: "2024-03-18T09:45:00",
+    updatedAt: "2024-03-18T09:45:00"
+  },
+  { 
+    id: 4,
+    numeroSS: "SS-2024-004",
+    fechaSolicitud: "2024-03-20",
+    fechaMontaje: "2024-03-28T16:30:00",
+    cliente: "Colegio San José",
+    evento: "Feria de Ciencias",
+    valor: 5800000,
+    facturaRemision: "R",
+    numeroFactura: "REM-2024-002",
+    estado: "Ejecutado",
+    costosProduccion: 3200000,
+    abonos: 5800000,
+    saldo: 0,
+    coordinador: "Pedro Sánchez",
+    createdAt: "2024-03-20T14:20:00",
+    updatedAt: "2024-03-29T10:15:00"
+  },
+  { 
+    id: 5,
+    numeroSS: "SS-2024-005",
+    fechaSolicitud: "2024-03-22",
+    fechaMontaje: "2024-04-05T08:00:00",
+    cliente: "Empresa XYZ",
+    evento: "Conferencia Anual",
+    valor: 18500000,
+    facturaRemision: "F",
+    numeroFactura: "FACT-2024-003",
+    estado: "En Proceso",
+    costosProduccion: 9800000,
+    abonos: 9250000,
+    saldo: 9250000,
+    coordinador: "Ana Martínez",
+    createdAt: "2024-03-22T11:30:00",
+    updatedAt: "2024-03-22T11:30:00"
+  },
+  { 
+    id: 6,
+    numeroSS: "SS-2024-006",
+    fechaSolicitud: "2024-03-25",
+    fechaMontaje: "2024-04-10T19:00:00",
+    cliente: "Teatro Municipal",
+    evento: "Obra de Teatro",
+    valor: 7200000,
+    facturaRemision: "R",
+    numeroFactura: "REM-2024-003",
+    estado: "Pendiente",
+    costosProduccion: 4100000,
+    abonos: 3600000,
+    saldo: 3600000,
+    coordinador: "Carlos Rodríguez",
+    createdAt: "2024-03-25T15:45:00",
+    updatedAt: "2024-03-25T15:45:00"
+  },
+  { 
+    id: 7,
+    numeroSS: "SS-2024-007",
+    fechaSolicitud: "2024-03-26",
+    fechaMontaje: "2024-03-30T11:00:00",
+    cliente: "Ayuntamiento",
+    evento: "Feria Municipal",
+    valor: 25000000,
+    facturaRemision: "F",
+    numeroFactura: "FACT-2024-004",
+    estado: "Ejecutado",
+    costosProduccion: 14000000,
+    abonos: 25000000,
+    saldo: 0,
+    coordinador: "Laura Gómez",
+    createdAt: "2024-03-26T10:00:00",
+    updatedAt: "2024-03-31T09:30:00"
+  },
+  { 
+    id: 8,
+    numeroSS: "SS-2024-008",
+    fechaSolicitud: "2024-03-28",
+    fechaMontaje: "2024-04-15T09:30:00",
+    cliente: "Empresa ABC",
+    evento: "Capacitación Empleados",
+    valor: 6500000,
+    facturaRemision: "R",
+    numeroFactura: "REM-2024-004",
+    estado: "Pendiente",
+    costosProduccion: 3800000,
+    abonos: 3250000,
+    saldo: 3250000,
+    coordinador: "Pedro Sánchez",
+    createdAt: "2024-03-28T13:15:00",
+    updatedAt: "2024-03-28T13:15:00"
+  },
+  { 
+    id: 9,
+    numeroSS: "SS-2024-009",
+    fechaSolicitud: "2024-03-29",
+    fechaMontaje: "2024-04-02T15:00:00",
+    cliente: "Hospital Central",
+    evento: "Congreso Médico",
+    valor: 12000000,
+    facturaRemision: "F",
+    numeroFactura: "FACT-2024-005",
+    estado: "En Proceso",
+    costosProduccion: 6500000,
+    abonos: 6000000,
+    saldo: 6000000,
+    coordinador: "Ana Martínez",
+    createdAt: "2024-03-29T09:45:00",
+    updatedAt: "2024-03-29T09:45:00"
+  },
+  { 
+    id: 10,
+    numeroSS: "SS-2024-010",
+    fechaSolicitud: "2024-04-01",
+    fechaMontaje: "2024-04-20T10:00:00",
+    cliente: "Universidad Central",
+    evento: "Simposio Científico",
+    valor: 9800000,
+    facturaRemision: "R",
+    numeroFactura: "REM-2024-005",
+    estado: "Pendiente",
+    costosProduccion: 5400000,
+    abonos: 4900000,
+    saldo: 4900000,
+    coordinador: "Carlos Rodríguez",
+    createdAt: "2024-04-01T11:30:00",
+    updatedAt: "2024-04-01T11:30:00"
+  },
+  { 
+    id: 11,
+    numeroSS: "SS-2024-011",
+    fechaSolicitud: "2024-04-02",
+    fechaMontaje: "2024-04-08T18:00:00",
+    cliente: "Empresa XYZ",
+    evento: "Lanzamiento Producto Y",
+    valor: 16500000,
+    facturaRemision: "F",
+    numeroFactura: "FACT-2024-006",
+    estado: "Facturado",
+    costosProduccion: 9000000,
+    abonos: 16500000,
+    saldo: 0,
+    coordinador: "Laura Gómez",
+    createdAt: "2024-04-02T14:20:00",
+    updatedAt: "2024-04-09T10:15:00"
+  },
+  { 
+    id: 12,
+    numeroSS: "SS-2024-012",
+    fechaSolicitud: "2024-04-03",
+    fechaMontaje: "2024-04-25T09:00:00",
+    cliente: "Colegio San José",
+    evento: "Festival de Fin de Curso",
+    valor: 7500000,
+    facturaRemision: "R",
+    numeroFactura: "REM-2024-006",
+    estado: "Pendiente",
+    costosProduccion: 4200000,
+    abonos: 3750000,
+    saldo: 3750000,
+    coordinador: "Pedro Sánchez",
+    createdAt: "2024-04-03T09:30:00",
+    updatedAt: "2024-04-03T09:30:00"
+  },
+  { 
+    id: 13,
+    numeroSS: "SS-2024-013",
+    fechaSolicitud: "2024-04-05",
+    fechaMontaje: "2024-04-12T14:30:00",
+    cliente: "Ministerio de Cultura",
+    evento: "Exposición de Arte",
+    valor: 14000000,
+    facturaRemision: "F",
+    numeroFactura: "FACT-2024-007",
+    estado: "En Proceso",
+    costosProduccion: 7800000,
+    abonos: 7000000,
+    saldo: 7000000,
+    coordinador: "Ana Martínez",
+    createdAt: "2024-04-05T11:45:00",
+    updatedAt: "2024-04-05T11:45:00"
+  },
+  { 
+    id: 14,
+    numeroSS: "SS-2024-014",
+    fechaSolicitud: "2024-04-06",
+    fechaMontaje: "2024-04-15T16:00:00",
+    cliente: "Teatro Municipal",
+    evento: "Concierto Benéfico",
+    valor: 8900000,
+    facturaRemision: "R",
+    numeroFactura: "REM-2024-007",
+    estado: "Cancelado",
+    costosProduccion: 2000000,
+    abonos: 0,
+    saldo: 0,
+    coordinador: "Carlos Rodríguez",
+    createdAt: "2024-04-06T10:15:00",
+    updatedAt: "2024-04-08T09:30:00"
+  },
+  { 
+    id: 15,
+    numeroSS: "SS-2024-015",
+    fechaSolicitud: "2024-04-08",
+    fechaMontaje: "2024-04-30T11:30:00",
+    cliente: "Ayuntamiento",
+    evento: "Celebración Día de la Ciudad",
+    valor: 28000000,
+    facturaRemision: "F",
+    numeroFactura: "FACT-2024-008",
+    estado: "Pendiente",
+    costosProduccion: 15000000,
+    abonos: 14000000,
+    saldo: 14000000,
+    coordinador: "Laura Gómez",
+    createdAt: "2024-04-08T13:00:00",
+    updatedAt: "2024-04-08T13:00:00"
   }
 ];
 
 export function ServiciosTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [servicios, setServicios] = useState(serviciosData);
-  const [nuevoServicioSheetOpen, setNuevoServicioSheetOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("formulario");
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
   
-  // Función para ordenar
-  const requestSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-  };
-
-  // Filtrar y ordenar servicios
-  const filteredAndSortedServicios = useMemo(() => {
-    let tempServicios = servicios.filter(servicio => 
-      servicio.numeroSS.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      servicio.cliente.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      servicio.evento.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      servicio.estado.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    
-    if (sortConfig.key) {
-      tempServicios = [...tempServicios].sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
-        }
-        return 0;
-      });
-    }
-    
-    return tempServicios;
-  }, [servicios, searchTerm, sortConfig]);
-
-  // Paginación
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredAndSortedServicios.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredAndSortedServicios.length / itemsPerPage);
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const handleItemsPerPageChange = (value) => {
-    setItemsPerPage(Number(value));
-    setCurrentPage(1);
-  };
-
   const handleServicioUpdated = () => {
     console.log("Servicio actualizado, recargando datos...");
   };
 
   const handleNuevoServicioSuccess = () => {
     console.log("Nuevo servicio guardado, recargando datos...");
-    setNuevoServicioSheetOpen(false);
     // Aquí iría la lógica para recargar los datos desde la API
-  };
-
-  const getSortIcon = (key) => {
-    if (sortConfig.key === key) {
-      return sortConfig.direction === 'ascending' 
-        ? <ArrowUpDown className="h-4 w-4 ml-1 text-blue-600" /> 
-        : <ArrowUpDown className="h-4 w-4 ml-1 text-blue-600 rotate-180" />;
-    }
-    return <ArrowUpDown className="h-4 w-4 ml-1 opacity-30" />;
   };
 
   // Función para formatear moneda
@@ -190,6 +325,117 @@ export function ServiciosTable() {
     return numeroSS.replace(/\D/g, '').padStart(5, '0');
   };
 
+  // Definir las columnas para DynamicTable
+  const columns = [
+    { 
+      key: 'fechaMontaje', 
+      label: 'Fecha Montaje', 
+      sortable: true,
+      format: (value) => formatDateTime(value)
+    },
+    { 
+      key: 'numeroSS', 
+      label: 'Nº SS', 
+      sortable: true,
+      format: (value) => formatNumeroSS(value)
+    },
+    { 
+      key: 'cliente', 
+      label: 'Cliente', 
+      sortable: true
+    },
+    { 
+      key: 'evento', 
+      label: 'Evento', 
+      sortable: true
+    },
+    { 
+      key: 'valor', 
+      label: 'Valor', 
+      sortable: true,
+      align: 'right',
+      format: (value) => formatCurrency(value)
+    },
+    { 
+      key: 'facturaRemision', 
+      label: 'F/R', 
+      sortable: true,
+      align: 'center',
+      format: (value) => (
+        <span className={`px-2 py-1 rounded-full text-xs ${
+          value === 'F' 
+            ? 'bg-green-100 text-green-800' 
+            : 'bg-blue-100 text-blue-800'
+        }`}>
+          {value}
+        </span>
+      )
+    },
+    { 
+      key: 'numeroFactura', 
+      label: 'NºFact', 
+      sortable: true
+    },
+    { 
+      key: 'estado', 
+      label: 'Estado', 
+      sortable: true,
+      format: (value) => (
+        <span className={`px-2 py-1 rounded-full text-xs ${
+          value === 'Pendiente' ? 'bg-yellow-100 text-yellow-800' :
+          value === 'En Proceso' ? 'bg-blue-100 text-blue-800' :
+          value === 'Ejecutado' ? 'bg-green-100 text-green-800' :
+          value === 'Facturado' ? 'bg-purple-100 text-purple-800' :
+          'bg-red-100 text-red-800'
+        }`}>
+          {value}
+        </span>
+      )
+    }
+  ];
+
+  // Definir las acciones para DynamicTable
+  const actions = [
+    { 
+      name: 'Ver', 
+      icon: <Eye className="h-4 w-4 text-blue-600" />, 
+      variant: 'ghost',
+      className: 'hover:bg-blue-50',
+      customRender: (servicio) => (
+        <ServicioSheet 
+          servicio={servicio} 
+          onServicioUpdated={handleServicioUpdated}
+        >
+          <Button variant="ghost" size="icon" className="hover:bg-blue-50">
+            <Eye className="h-4 w-4 text-blue-600" />
+          </Button>
+        </ServicioSheet>
+      )
+    },
+    { 
+      name: 'Eliminar', 
+      icon: <Trash2 className="h-4 w-4 text-red-600" />, 
+      variant: 'ghost',
+      className: 'hover:bg-red-50',
+      onClick: (servicio) => {
+        if (window.confirm("¿Está seguro de que desea eliminar este servicio? Esta acción no se puede deshacer.")) {
+          console.log("Servicio eliminado:", servicio);
+          handleServicioUpdated();
+        }
+      } 
+    }
+  ];
+
+  // Filtrar datos según el término de búsqueda
+  const filteredData = useMemo(() => {
+    return servicios.filter(servicio => 
+      servicio.numeroSS.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      servicio.cliente.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      servicio.evento.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      servicio.estado.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [servicios, searchTerm]);
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -206,210 +452,16 @@ export function ServiciosTable() {
         <NuevoServicioDrawer onSuccess={handleNuevoServicioSuccess} />
       </div>
       
-      <div className="rounded-md border shadow-sm overflow-hidden">
-        <Table>
-          <TableHeader className="bg-gray-100">
-            <TableRow>
-              <TableHead className="font-bold cursor-pointer py-4 px-4" onClick={() => requestSort('fechaMontaje')}>
-                <div className="flex items-center">
-                  Fecha Montaje {getSortIcon('fechaMontaje')}
-                </div>
-              </TableHead>
-              <TableHead className="font-bold cursor-pointer py-4 px-4" onClick={() => requestSort('numeroSS')}>
-                <div className="flex items-center">
-                  Nº SS {getSortIcon('numeroSS')}
-                </div>
-              </TableHead>
-              <TableHead className="font-bold cursor-pointer py-4 px-4" onClick={() => requestSort('cliente')}>
-                <div className="flex items-center">
-                  Cliente {getSortIcon('cliente')}
-                </div>
-              </TableHead>
-              <TableHead className="font-bold cursor-pointer py-4 px-4" onClick={() => requestSort('evento')}>
-                <div className="flex items-center whitespace-nowrap">
-                  Evento {getSortIcon('evento')}
-                </div>
-              </TableHead>
-              <TableHead className="font-bold cursor-pointer py-4 px-4 text-right" onClick={() => requestSort('valor')}>
-                <div className="flex items-center justify-end">
-                  Valor {getSortIcon('valor')}
-                </div>
-              </TableHead>
-              <TableHead className="font-bold cursor-pointer py-4 px-4 text-center" onClick={() => requestSort('facturaRemision')}>
-                <div className="flex items-center justify-center">
-                  F/R {getSortIcon('facturaRemision')}
-                </div>
-              </TableHead>
-              <TableHead className="font-bold cursor-pointer py-4 px-4" onClick={() => requestSort('numeroFactura')}>
-                <div className="flex items-center">
-                  NºFact {getSortIcon('numeroFactura')}
-                </div>
-              </TableHead>
-              <TableHead className="font-bold cursor-pointer py-4 px-4" onClick={() => requestSort('estado')}>
-                <div className="flex items-center">
-                  Estado {getSortIcon('estado')}
-                </div>
-              </TableHead>
-              <TableHead className="text-right font-bold py-4 px-4">Acciones</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {currentItems.length > 0 ? (
-              currentItems.map((servicio) => (
-                <TableRow key={servicio.id} className="hover:bg-gray-50">
-                  <TableCell className="py-3 px-4">
-                    {formatDateTime(servicio.fechaMontaje)}
-                  </TableCell>
-                  <TableCell className="py-3 px-4">
-                    {formatNumeroSS(servicio.numeroSS)}
-                  </TableCell>
-                  <TableCell className="py-3 px-4" title={servicio.cliente}>
-                    {servicio.cliente}
-                  </TableCell>
-                  <TableCell className="py-3 px-4" title={servicio.evento}>
-                    {servicio.evento}
-                  </TableCell>
-                  <TableCell className="py-3 px-4 text-right">
-                    {formatCurrency(servicio.valor)}
-                  </TableCell>
-                  <TableCell className="py-3 px-4">
-                    <span className={`px-2 py-1 rounded-full text-xs ${
-                      servicio.facturaRemision === 'F' 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-blue-100 text-blue-800'
-                    }`}>
-                      {servicio.facturaRemision}
-                    </span>
-                  </TableCell>
-                  <TableCell className="py-3 px-4">
-                    {servicio.numeroFactura}
-                  </TableCell>
-                  <TableCell className="py-3 px-4">
-                    <span className={`px-2 py-1 rounded-full text-xs ${
-                      servicio.estado === 'Pendiente' ? 'bg-yellow-100 text-yellow-800' :
-                      servicio.estado === 'En Proceso' ? 'bg-blue-100 text-blue-800' :
-                      servicio.estado === 'Ejecutado' ? 'bg-green-100 text-green-800' :
-                      servicio.estado === 'Facturado' ? 'bg-purple-100 text-purple-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {servicio.estado}
-                    </span>
-                  </TableCell>
-                  <TableCell className="py-3 px-4">
-                    <div className="flex justify-end gap-2">
-                      <ServicioSheet 
-                        servicio={servicio} 
-                        onServicioUpdated={handleServicioUpdated}
-                      >
-                        <Button variant="ghost" size="icon" className="hover:bg-blue-50">
-                          <Eye className="h-4 w-4 text-blue-600" />
-                        </Button>
-                      </ServicioSheet>
-                      <Button 
-                        variant="ghost" 
-                        size="icon"
-                        className="hover:bg-red-50"
-                        onClick={() => {
-                          if (window.confirm("¿Está seguro de que desea eliminar este servicio? Esta acción no se puede deshacer.")) {
-                            console.log("Servicio eliminado:", servicio);
-                            handleServicioUpdated();
-                          }
-                        }}
-                      >
-                        <Trash2 className="h-4 w-4 text-red-600" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={9} className="text-center py-8 text-gray-500">
-                  No se encontraron servicios
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* Paginación mejorada */}
-      {filteredAndSortedServicios.length > 0 && (
-        <div className="flex items-center justify-between bg-white px-4 py-3 border rounded-md">
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-700">
-              Mostrando <span className="font-medium">{indexOfFirstItem + 1}</span> a <span className="font-medium">{Math.min(indexOfLastItem, filteredAndSortedServicios.length)}</span> de{" "}
-              <span className="font-medium">{filteredAndSortedServicios.length}</span> servicios
-            </span>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-700">Mostrar</span>
-              <Select
-                value={itemsPerPage.toString()}
-                onValueChange={handleItemsPerPageChange}
-              >
-                <SelectTrigger className="w-[70px] h-8">
-                  <SelectValue placeholder="10" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="5">5</SelectItem>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="20">20</SelectItem>
-                  <SelectItem value="50">50</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="h-8 w-8 p-0"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-              let pageNum;
-              if (totalPages <= 5) {
-                pageNum = i + 1;
-              } else if (currentPage <= 3) {
-                pageNum = i + 1;
-              } else if (currentPage >= totalPages - 2) {
-                pageNum = totalPages - 4 + i;
-              } else {
-                pageNum = currentPage - 2 + i;
-              }
-              
-              return (
-                <Button
-                  key={pageNum}
-                  variant={currentPage === pageNum ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handlePageChange(pageNum)}
-                  className={`h-8 w-8 p-0 ${
-                    currentPage === pageNum 
-                      ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                      : 'hover:bg-gray-50'
-                  }`}
-                >
-                  {pageNum}
-                </Button>
-              );
-            })}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="h-8 w-8 p-0"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      )}
+      <DynamicTable 
+        columns={columns}
+        data={filteredData}
+        actions={actions}
+        caption="Listado de servicios"
+        searchPlaceholder="Buscar servicios..."
+        showSearch={false} // Desactivamos la búsqueda interna porque ya tenemos nuestro propio campo de búsqueda
+        defaultItemsPerPage={10}
+        itemsPerPageOptions={[5, 10, 20, 50]}
+      />
     </div>
   );
 } 
