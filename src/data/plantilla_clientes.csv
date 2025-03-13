@@ -1,0 +1,11 @@
+id,nombre,tipoDocumento,numeroDocumento,direccion,ciudad,contacto,telefono,email,tipoCliente
+1,Empresa ABC,NIT,9001234567,"Calle 100 # 15-20",Bogotá,"Juan Pérez",3001234567,contacto@empresaabc.com,Venue
+2,Juan Pérez,"Cédula de Ciudadanía",1023456789,"Carrera 43A # 1-50",Medellín,"María López",3109876543,juan.perez@ejemplo.com,OPC
+3,Ministerio de Educación,NIT,8002345678,"Avenida El Dorado # 57-50",Bogotá,"Ana Martínez",6013214567,info@educacion.gov.co,Institucional
+4,Universidad Central,NIT,8003456789,"Calle 5 # 4-70",Cali,"Carlos Rodríguez",6023456789,info@universidadcentral.edu.co,Centro de Convenciones
+5,María García,"Cédula de Ciudadanía",1034567890,"Carrera 54 # 68-196",Barranquilla,"Luis Fernández",3054567890,maria.garcia@ejemplo.com,Wedding & Event Planner
+6,Restaurante El Cielo,NIT,9004567890,"Calle 70 # 4-47",Bogotá,"Elena Sánchez",6017654321,contacto@elcielo.com,Restaurante
+7,Hotel Las Américas,NIT,9005678901,"Anillo Vial, Sector Cielo Mar",Cartagena,"Roberto Gómez",3125678901,reservas@hotelamericas.com,Hotel
+8,Agencia Creativa,NIT,9006789012,"Calle 10 # 37-124",Bucaramanga,"Carolina Díaz",3156789012,info@agenciacreativa.com,Agencia de Publicidad
+9,Eventos Profesionales,NIT,9007890123,"Avenida Circunvalar # 5-20",Pereira,"Andrés Martínez",3187890123,contacto@eventospro.com,Colega
+10,Productora Visual,NIT,9008901234,"Carrera 1 # 22-58",Santa Marta,"Camila Rodríguez",3208901234,info@productoravisual.com,Productor 

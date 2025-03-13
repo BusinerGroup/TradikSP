@@ -39,9 +39,13 @@ const formSchema = z.object({
   tipoDocumento: z.string({
     required_error: "Por favor seleccione un tipo de documento.",
   }),
-  numeroDocumento: z.string().min(5, {
-    message: "El número de documento debe tener al menos 5 caracteres.",
-  }),
+  numeroDocumento: z.string()
+    .min(5, {
+      message: "El número de documento debe tener al menos 5 caracteres.",
+    })
+    .regex(/^\d+$/, {
+      message: "El número de documento debe contener solo dígitos numéricos.",
+    }),
   direccion: z.string().min(5, {
     message: "La dirección debe tener al menos 5 caracteres.",
   }),
@@ -51,9 +55,13 @@ const formSchema = z.object({
   contacto: z.string().min(2, {
     message: "El contacto debe tener al menos 2 caracteres.",
   }),
-  telefono: z.string().min(7, {
-    message: "El teléfono debe tener al menos 7 caracteres.",
-  }),
+  telefono: z.string()
+    .min(7, {
+      message: "El teléfono debe tener al menos 7 caracteres.",
+    })
+    .regex(/^\d+$/, {
+      message: "El teléfono debe contener solo dígitos numéricos.",
+    }),
   email: z.string().email({
     message: "Por favor ingrese un correo electrónico válido.",
   }).optional(),
@@ -130,11 +138,16 @@ export function ClienteForm({ onSuccess, inDialog = false, initialData = null })
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="Individual">Individual</SelectItem>
-                    <SelectItem value="Corporativo">Corporativo</SelectItem>
-                    <SelectItem value="Gubernamental">Gubernamental</SelectItem>
-                    <SelectItem value="Educativo">Educativo</SelectItem>
-                    <SelectItem value="ONG">ONG</SelectItem>
+                    <SelectItem value="Venue">Venue</SelectItem>
+                    <SelectItem value="OPC">OPC</SelectItem>
+                    <SelectItem value="Productor">Productor</SelectItem>
+                    <SelectItem value="Centro de Convenciones">Centro de Convenciones</SelectItem>
+                    <SelectItem value="Hotel">Hotel</SelectItem>
+                    <SelectItem value="Restaurante">Restaurante</SelectItem>
+                    <SelectItem value="Wedding & Event Planner">Wedding & Event Planner</SelectItem>
+                    <SelectItem value="Colega">Colega</SelectItem>
+                    <SelectItem value="Agencia de Publicidad">Agencia de Publicidad</SelectItem>
+                    <SelectItem value="Institucional">Institucional</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -155,11 +168,9 @@ export function ClienteForm({ onSuccess, inDialog = false, initialData = null })
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="NIF">NIF</SelectItem>
-                    <SelectItem value="CIF">CIF</SelectItem>
-                    <SelectItem value="NIE">NIE</SelectItem>
+                    <SelectItem value="Cédula de Ciudadanía">Cédula de Ciudadanía</SelectItem>
+                    <SelectItem value="NIT">NIT</SelectItem>
                     <SelectItem value="Pasaporte">Pasaporte</SelectItem>
-                    <SelectItem value="Otro">Otro</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -176,7 +187,15 @@ export function ClienteForm({ onSuccess, inDialog = false, initialData = null })
                 <FormControl>
                   <Input 
                     placeholder="Número de documento" 
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     {...field} 
+                    onChange={(e) => {
+                      // Solo permitir dígitos
+                      const value = e.target.value.replace(/\D/g, '');
+                      field.onChange(value);
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
@@ -207,12 +226,27 @@ export function ClienteForm({ onSuccess, inDialog = false, initialData = null })
             render={({ field }) => (
               <FormItem className="space-y-2">
                 <FormLabel className="text-base font-semibold text-foreground">Ciudad</FormLabel>
-                <FormControl>
-                  <Input 
-                    placeholder="Ciudad" 
-                    {...field} 
-                  />
-                </FormControl>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccione una ciudad" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Bogotá">Bogotá</SelectItem>
+                    <SelectItem value="Medellín">Medellín</SelectItem>
+                    <SelectItem value="Cali">Cali</SelectItem>
+                    <SelectItem value="Barranquilla">Barranquilla</SelectItem>
+                    <SelectItem value="Cartagena">Cartagena</SelectItem>
+                    <SelectItem value="Bucaramanga">Bucaramanga</SelectItem>
+                    <SelectItem value="Pereira">Pereira</SelectItem>
+                    <SelectItem value="Santa Marta">Santa Marta</SelectItem>
+                    <SelectItem value="Manizales">Manizales</SelectItem>
+                    <SelectItem value="Villavicencio">Villavicencio</SelectItem>
+                    <SelectItem value="Pasto">Pasto</SelectItem>
+                    <SelectItem value="Otra">Otra</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -244,7 +278,15 @@ export function ClienteForm({ onSuccess, inDialog = false, initialData = null })
                 <FormControl>
                   <Input 
                     placeholder="Teléfono de contacto" 
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     {...field} 
+                    onChange={(e) => {
+                      // Solo permitir dígitos
+                      const value = e.target.value.replace(/\D/g, '');
+                      field.onChange(value);
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
